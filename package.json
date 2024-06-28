@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev ./src/index.ts",
+    "start": "node ./build/index.js",
     "typeorm": "typeorm-ts-node-commonjs -d ./src/server/database/data-source.ts",
     "build": "tsc",
     "seed": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js seed -d ./src/server/database/data-source.ts",
