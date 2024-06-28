@@ -107,8 +107,6 @@ REGRAS_PERMISSOES=${REGRAS_PERMISSOES}" > .env
 # Build da aplicação
 RUN npm run build
 
-RUN cp -r src/server/shared/data /usr/src/app/build/server/shared/
-
 # Expose the port the app runs on
 EXPOSE 5032
 
