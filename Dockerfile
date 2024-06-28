@@ -152,6 +152,9 @@ UNIVERSE_DOMAIN=${UNIVERSE_DOMAIN}" > .env
 # Build da aplicação
 RUN npm run build
 
+# Condicional para copiar os arquivos
+RUN if [ "$SALVAR_FOTO_LOCAL" = "true" ]; then cp -r src/server/shared/data build/server/shared/; fi
+
 # Expose the port the app runs on
 EXPOSE 5032
 
