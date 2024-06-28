@@ -1,0 +1,65 @@
+services:
+    database:
+        image: postgres
+        container_name: bf-database
+        restart: always
+        ports:
+            - 5436:5432
+        expose:
+            - "5432"
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_DB=db_blog_fiap
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        networks:
+            - rede-bf
+
+    backend-blog-fiap:
+        container_name: bf-backend
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                PORT: 5032
+                HOST: "10.86.177.18"
+                NODE_ENV: "production"
+                DB_HOST: "database"
+                DB_PORT: "5432"
+                DB_USER: "postgres"
+                DB_PASS: "root"
+                DB_NAME: "db_blog_fiap"
+                JWT_SECRET: "supersecret"
+                NAME_USER_DEFAULT: "admin"
+                EMAIL_USER_DEFAULT: "admin@example.com"
+                SOBRENOME_USER_DEFAULT: "Admin"
+                SENHA_USER_DEFAULT: "12345678"
+                SALVAR_FOTO_LOCAL: "true"
+                URL: "http://localhost:5173/login"
+                GOOGLE_HOST: "smtp.gmail.com"
+                GOOGLE_PORT: "587"
+                MAIL_USERNAME: "fiapgrupo913@gmail.com"
+                MAIL_PASSWORD: "GrupoFiap99*"
+                REGRAS_PERMISSOES: '{"REGRA_ADMIN":[],"REGRA_PROFESSOR":["PERMISSAO_DELETAR_POSTAGEM","PERMISSAO_ATUALIZAR_POSTAGEM", "PERMISSAO_CRIAR_POSTAGEM"] ,"REGRA_USUARIO":["PERMISSAO_DELETAR_USUARIO","PERMISSAO_ATUALIZAR_USUARIO", "PERMISSAO_CRIAR_USUARIO"]}'
+        ports:
+            - "5032:5032"
+        depends_on:
+            - database
+        volumes:
+            - fotos_usuarios:/usr/src/app/data/fotos-usuarios
+            - capas_postagens:/usr/src/app/data/capas-postagens
+        networks:
+            - rede-bf
+
+volumes:
+    pgdata:
+        driver: local
+    fotos_usuarios:
+        driver: local
+    capas_postagens:
+        driver: local
+
+networks:
+    rede-bf:
+        driver: bridge

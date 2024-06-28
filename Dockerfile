@@ -1,0 +1,115 @@
+# Use an official Node.js runtime as a parent image
+FROM node:latest
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install app dependencies
+RUN npm install
+
+# Copy all files from the current directory to the working directory
+COPY . .
+
+# Definições da API e outras variáveis de ambiente
+ARG PORT
+ENV PORT=$PORT
+
+ARG HOST
+ENV HOST=$HOST
+
+ARG NODE_ENV
+ENV NODE_ENV=$NODE_ENV
+
+# Definições do Banco de Dados
+ARG DB_HOST
+ENV DB_HOST=$DB_HOST
+
+ARG DB_PORT
+ENV DB_PORT=$DB_PORT
+
+ARG DB_USER
+ENV DB_USER=$DB_USER
+
+ARG DB_PASS
+ENV DB_PASS=$DB_PASS
+
+ARG DB_NAME
+ENV DB_NAME=$DB_NAME
+
+# Secret Password JWT
+ARG JWT_SECRET
+ENV JWT_SECRET=$JWT_SECRET
+
+# USUARIO PADRAO NO BANCO DE DADOS
+ARG NAME_USER_DEFAULT
+ENV NAME_USER_DEFAULT=$NAME_USER_DEFAULT
+
+ARG EMAIL_USER_DEFAULT
+ENV EMAIL_USER_DEFAULT=$EMAIL_USER_DEFAULT
+
+ARG SOBRENOME_USER_DEFAULT
+ENV SOBRENOME_USER_DEFAULT=$SOBRENOME_USER_DEFAULT
+
+ARG SENHA_USER_DEFAULT
+ENV SENHA_USER_DEFAULT=$SENHA_USER_DEFAULT
+
+# Salvar foto Localmente
+ARG SALVAR_FOTO_LOCAL
+ENV SALVAR_FOTO_LOCAL=$SALVAR_FOTO_LOCAL
+
+# URL APlicação
+ARG URL
+ENV URL=$URL
+
+# CONTA GOOGLE
+ARG GOOGLE_HOST
+ENV GOOGLE_HOST=$GOOGLE_HOST
+
+ARG GOOGLE_PORT
+ENV GOOGLE_PORT=$GOOGLE_PORT
+
+ARG MAIL_USERNAME
+ENV MAIL_USERNAME=$MAIL_USERNAME
+
+ARG MAIL_PASSWORD
+ENV MAIL_PASSWORD=$MAIL_PASSWORD
+
+# Regras e Permissões da aplicação
+ARG REGRAS_PERMISSOES
+ENV REGRAS_PERMISSOES=$REGRAS_PERMISSOES
+
+# Criar o arquivo .env com todas as variáveis de ambiente
+RUN echo "\
+PORT=${PORT}\n\
+HOST=${HOST}\n\
+NODE_ENV=${NODE_ENV}\n\
+DB_HOST=${DB_HOST}\n\
+DB_PORT=${DB_PORT}\n\
+DB_USER=${DB_USER}\n\
+DB_PASS=${DB_PASS}\n\
+DB_NAME=${DB_NAME}\n\
+JWT_SECRET=${JWT_SECRET}\n\
+NAME_USER_DEFAULT=${NAME_USER_DEFAULT}\n\
+EMAIL_USER_DEFAULT=${EMAIL_USER_DEFAULT}\n\
+SOBRENOME_USER_DEFAULT=${SOBRENOME_USER_DEFAULT}\n\
+SENHA_USER_DEFAULT=${SENHA_USER_DEFAULT}\n\
+SALVAR_FOTO_LOCAL=${SALVAR_FOTO_LOCAL}\n\
+URL=${URL}\n\
+GOOGLE_HOST=${GOOGLE_HOST}\n\
+GOOGLE_PORT=${GOOGLE_PORT}\n\
+MAIL_USERNAME=${MAIL_USERNAME}\n\
+MAIL_PASSWORD=${MAIL_PASSWORD}\n\
+REGRAS_PERMISSOES=${REGRAS_PERMISSOES}" > .env
+
+# Build da aplicação
+RUN npm run build
+
+RUN cp -r src/server/shared/data /usr/src/app/build/server/shared/
+
+# Expose the port the app runs on
+EXPOSE 5032
+
+CMD ["node", "build/index.js"]
