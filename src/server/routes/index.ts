@@ -12,11 +12,6 @@ router.get('/', (_, res) => {
     return res.status(StatusCodes.OK).send('Tudo certo');
 });
 
-router.get('/teste', (_, res) => {
-    return res.status(StatusCodes.OK).send('Tudo certo');
-});
-
-
 const fotoLocal = process.env.SALVAR_FOTO_LOCAL as unknown as Boolean;
 
 //Permissoes
