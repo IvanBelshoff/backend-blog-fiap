@@ -36,6 +36,9 @@ const options_db_local: DataSourceOptions & SeederOptions = {
     synchronize: true,
     entities: [`${__dirname}/**/entities/*.{ts,js}`],
     migrations: [`${__dirname}/**/migrations/*.{ts,js}`],
+    seeds: ['src/server/database/seeds/**/*{.ts,.js}'],
+    seedTracking: false,
+    factories: ['src/server/database/factories/**/*{.ts,.js}'],
 };
 
 export const AppDataSource = new DataSource((host == 'database' || host == 'localhost') ? options_db_local : options_db_nuvem);
