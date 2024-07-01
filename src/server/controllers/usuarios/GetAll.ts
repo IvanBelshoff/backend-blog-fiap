@@ -34,6 +34,8 @@ export const getAll = async (req: Request<{}, {}, {}, IQueryGetAllUsuarios>, res
         });
     }
 
+    console.log(count);
+    
     res.setHeader('access-control-expose-headers', 'x-total-count');
     res.setHeader('x-total-count', count);
 

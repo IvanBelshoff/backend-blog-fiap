@@ -13,6 +13,6 @@ export default class UserSeeder implements Seeder {
         await userFactory.save();
 
         // save 5 factory generated entities, to the database
-        await userFactory.saveMany(8);
+        await userFactory.saveMany(9);
     }
 }
