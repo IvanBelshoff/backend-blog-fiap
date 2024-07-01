@@ -38,4 +38,4 @@ const options_db_local: DataSourceOptions & SeederOptions = {
     migrations: [`${__dirname}/**/migrations/*.{ts,js}`],
 };
 
-export const AppDataSource = new DataSource(host == "database" ? options_db_local : options_db_nuvem);
+export const AppDataSource = new DataSource((host == 'database' || host == 'localhost') ? options_db_local : options_db_nuvem);

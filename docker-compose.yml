@@ -1,4 +1,5 @@
 services:
+
     database:
         image: postgres
         container_name: bf-local-database
@@ -62,6 +63,26 @@ services:
             - capas_postagens:/usr/src/app/data/capas-postagens
         networks:
             - rede-bf
+
+    prometheus:
+        image: prom/prometheus
+        ports:
+            - "9090:9090"
+        command: 
+            - --config.file=/etc/prometheus/prometheus.yml
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+        networks:
+            - rede-bf
+        
+    grafana:
+        image: grafana/grafana
+        ports:
+            - "3000:3000"
+        networks:
+            - rede-bf
+        depends_on:
+            - prometheus
 
 volumes:
     pgdata:

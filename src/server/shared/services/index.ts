@@ -8,3 +8,4 @@ export * from './UserDefault';
 export * from './RegrasEPermissoes';
 export * from './firebase';
 export * from './ArquivoProfile';
+

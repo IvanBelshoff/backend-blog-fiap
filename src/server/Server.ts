@@ -4,6 +4,7 @@ import 'reflect-metadata';
 import morgan from 'morgan';
 import express from 'express';
 import bodyParser from 'body-parser';
+import expressPromBundle from 'express-prom-bundle';
 
 import './shared/services/TranslationsYup';
 import { router } from './routes';
@@ -11,8 +12,15 @@ import path from 'path';
 
 const server = express();
 
-server.use(express.json());
+const metricsMiddleware = expressPromBundle({
+    includeMethod: true,
+    includePath: true,
+    customLabels: { project_name: 'Backend-Blog-fiap', project_type: 'blog' },
+    promClient: { collectDefaultMetrics: {} },
+});
 
+server.use(express.json());
+server.use(metricsMiddleware);
 server.disable('etag');
 server.use(morgan('dev'));
 server.use(bodyParser.urlencoded({ extended: false }));

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { EnsureAuthenticated, Permissoes, Regras, SalvarFoto, SalvarFotoFirebase } from '../shared/middlewares';
+import { EnsureAuthenticated, Permissoes, Regras, SalvarFoto, SalvarFotoFirebase, register } from '../shared/middlewares';
 import { PermissoesController } from '../controllers/permissoes';
 import { RegrasController } from '../controllers/regras';
 import { UsuariosController } from '../controllers/usuarios';
@@ -8,11 +8,16 @@ import { PostagensController } from '../controllers/postagens';
 
 const router = Router();
 
+const fotoLocal = process.env.SALVAR_FOTO_LOCAL as unknown as Boolean;
+
 router.get('/', (_, res) => {
     return res.status(StatusCodes.OK).send('Tudo certo');
 });
 
-const fotoLocal = process.env.SALVAR_FOTO_LOCAL as unknown as Boolean;
+router.get('/metrics', async (_, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
 
 //Permissoes
 router.post('/permissoes', EnsureAuthenticated, Regras(['REGRA_ADMIN']), PermissoesController.createValidation, PermissoesController.create);
