@@ -29,7 +29,7 @@ const options = {
             },
         ],
     },
-    apis: [path.resolve(__dirname, '..', '..', 'routes', 'index.ts')], // Caminho para os arquivos que contêm comentários JSDoc
+    apis: [path.resolve(__dirname, '..', '..', 'routes', 'index.{ts,js}')], // Caminho para os arquivos que contêm comentários JSDoc
 };
 
 const swaggerSpec = swaggerJsdoc(options);
