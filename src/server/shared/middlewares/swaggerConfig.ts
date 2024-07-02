@@ -11,7 +11,7 @@ const options = {
         },
         servers: [
             {
-                url: 'http://localhost:5032',
+                url: process.env.URL,
             },
         ],
         components: {
