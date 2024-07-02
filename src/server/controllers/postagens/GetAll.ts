@@ -33,8 +33,6 @@ export const getAll = async (req: Request<{}, {}, {}, IQueryGetAllPostagens>, re
             errors: { default: count.message }
         });
     }
-
-    console.log(count);
     
     res.setHeader('access-control-expose-headers', 'x-total-count');
     res.setHeader('x-total-count', count);
