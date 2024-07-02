@@ -11,9 +11,6 @@ export const deliveryMailPassword = async (email: string, senha: string): Promis
         auth: {
             user: process.env.MAIL_USERNAME,
             pass: process.env.MAIL_PASSWORD
-        },
-        tls: {
-            rejectUnauthorized: false
         }
     });
 
