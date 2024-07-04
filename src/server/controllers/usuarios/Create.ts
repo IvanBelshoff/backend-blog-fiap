@@ -107,7 +107,7 @@ export const create = async (req: Request<{}, {}, IBodyCreateUsuarios>, res: Res
             if (deleteFoto instanceof Error) {
                 return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
                     errors: {
-                        default: resultUsuario.message
+                        default: deleteFoto.message
                     }
                 });
             }

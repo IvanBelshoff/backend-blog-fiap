@@ -1,9 +1,7 @@
-import path from 'path';
-
 import { fotoRepository } from '../../database/repositories/fotoRepository';
 import { usuarioRepository } from '../../database/repositories';
 import { IBodyCreateUsuarios } from '../../shared/interfaces';
-import { DeleteArquivoFirebase, PasswordCrypto, deleteArquivoLocal } from '../../shared/services';
+import { PasswordCrypto } from '../../shared/services';
 import { Permissao, Regra } from '../../database/entities';
 
 interface IFoto extends IBodyCreateUsuarios {
@@ -42,11 +40,6 @@ const regrasCopiadas = async (id?: number): Promise<Error | { regras: Regra[]; p
 };
 
 export const create = async (usuario: IFoto): Promise<number | Error> => {
-
-    const fotoLocal = process.env.SALVAR_FOTO_LOCAL as unknown as Boolean;
-
-    const local = path.resolve(__dirname, '..', '..', '..', 'shared', 'img', 'default\\profile.jpg');
-    const filename = 'profile.jpg';
 
     try {
 
@@ -98,16 +91,6 @@ export const create = async (usuario: IFoto): Promise<number | Error> => {
     } catch (error) {
 
         console.log(error);
-
-        if (usuario.file == false) {
-
-            const deleteFotoLocal = String(fotoLocal) == 'true' ? await deleteArquivoLocal(local, filename) : await DeleteArquivoFirebase(local, filename);
-
-            if (deleteFotoLocal instanceof Error) {
-                console.log(deleteFotoLocal.message);
-            }
-
-        }
 
         return new Error('Erro ao cadastrar o registro');
     }

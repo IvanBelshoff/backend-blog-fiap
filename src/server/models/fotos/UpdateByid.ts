@@ -1,5 +1,4 @@
 import mime from 'mime';
-
 import { Foto } from '../../database/entities';
 import { fotoRepository } from '../../database/repositories/fotoRepository';
 import path from 'path';

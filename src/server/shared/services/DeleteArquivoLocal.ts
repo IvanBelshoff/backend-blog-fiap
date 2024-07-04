@@ -18,7 +18,7 @@ export const deleteArquivoLocal = async (path: string, filename: string): Promis
 
         // Tenta excluir o arquivo
         await fs.unlink(path);
-        
+
         console.log('\nFoto original foi excluída localmente');
 
     } catch (error) {
