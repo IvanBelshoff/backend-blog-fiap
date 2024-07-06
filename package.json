@@ -12,7 +12,8 @@
     "seed:usuarios": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run  -d ./src/server/database/data-source.ts --name src/server/database/seeds/user.seeder.ts",
     "migration:generate": "typeorm-ts-node-commonjs -d ./src/server/database/data-source.ts migration:generate ./src/server/database/migrations/default",
     "migration:run": "typeorm-ts-node-commonjs -d ./src/server/database/data-source.ts migration:run",
-    "migration:revert": "typeorm-ts-node-commonjs -d ./src/server/database/data-source.ts migration:revert"
+    "migration:revert": "typeorm-ts-node-commonjs -d ./src/server/database/data-source.ts migration:revert",
+    "test": "jest"
   },
   "author": "Ivan Belshoff",
   "license": "ISC",
@@ -42,9 +43,11 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
     "@types/multer": "^1.4.11",
@@ -55,6 +58,8 @@
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
     "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.5",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   }

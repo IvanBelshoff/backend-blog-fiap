@@ -20,150 +20,96 @@ export const createValidation = validation((getSchema) => ({
 }));
 
 export const create = async (req: Request<{}, {}, IBodyCreateUsuarios>, res: Response) => {
-
-    const fotoLocal = process.env.SALVAR_FOTO_LOCAL as unknown as Boolean;
-
+    const fotoLocal = Boolean(process.env.SALVAR_FOTO_LOCAL);
     const usuario = await decoder(req);
+    const { email } = req.body;
 
-    const validaEmail = await UsuariosProvider.validaEmailUsuario(req.body.email);
+    try {
+        const validaEmail = await UsuariosProvider.validaEmailUsuario(email);
 
-    if (validaEmail instanceof Error) {
+        if (validaEmail) {
+            if (req.file) {
+                await handleFailedUserCreation(req.file.path, req.file.filename, fotoLocal);
+            }
+            return res.status(StatusCodes.BAD_REQUEST).json({ errors: validaEmail });
+        }
 
         if (req.file) {
-
-            const deleteFoto = String(fotoLocal) == 'true' ? await deleteArquivoLocal(req.file.path, req.file.filename) : await DeleteArquivoFirebase(req.file.path, req.file.filename);
-
-            if (deleteFoto instanceof Error) {
-                console.log(deleteFoto.message);
-            }
-        }
-
-        return res.status(StatusCodes.BAD_REQUEST).json({
-            errors: JSON.parse(validaEmail.message)
-        });
-    }
-
-    if (req.file) {
-
-        const imageBuffer = String(fotoLocal) == 'true' ? req.file.path : req.file.buffer;
-        const metadata = await sharp(imageBuffer).metadata();
-
-        const resultFoto = await FotosProvider.create({
-            filename: req.file.filename,
-            mimetype: req.file.mimetype,
-            originalname: req.file.originalname,
-            path: req.file.path,
-            size: req.file.size,
-            width: metadata.width,
-            height: metadata.height,
-            nuvem: String(fotoLocal) == 'true' ? false : true,
-            tipo_foto: 'usuarios'
-        });
-
-        if (resultFoto instanceof Error) {
-
-            const deleteFotolocal = String(fotoLocal) == 'true' ? await deleteArquivoLocal(req.file.path, req.file.filename) : await DeleteArquivoFirebase(req.file.path, req.file.filename);
-
-            if (deleteFotolocal instanceof Error) {
-                console.log(deleteFotolocal.message);
-            }
-
-            const deleteFoto = await FotosProvider.deleteByFilename(req.file.filename);
-
-            if (deleteFoto instanceof Error) {
-                console.log(deleteFoto.message);
-            }
-
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                errors: {
-                    default: resultFoto.message
-                }
-            });
-        }
-
-        const resultUsuario = await UsuariosProvider.create({
-            ...req.body,
-            usuario_cadastrador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
-            usuario_atualizador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
-            id_foto: resultFoto,
-            file: !!req.file,
-            id_copy_regras: req.body.id_copy_regras
-        });
-
-        if (resultUsuario instanceof Error) {
-
-            const deleteFotoLocal = String(fotoLocal) == 'true' ? await deleteArquivoLocal(req.file.path, req.file.filename) : await DeleteArquivoFirebase(req.file.path, req.file.filename);
-
-            if (deleteFotoLocal instanceof Error) {
-                console.log(deleteFotoLocal.message);
-            }
-
-            const deleteFoto = await FotosProvider.deleteByFilename(req.file.filename);
-
-            if (deleteFoto instanceof Error) {
-                console.log(deleteFoto.message);
-            }
-
-            if (deleteFoto instanceof Error) {
-                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                    errors: {
-                        default: deleteFoto.message
-                    }
+            const imageBuffer = fotoLocal ? req.file.path : req.file.buffer;
+            const metadata = await sharp(imageBuffer)?.metadata();
+            let resultFoto;
+            try {
+                resultFoto = await FotosProvider.create({
+                    filename: req.file.filename,
+                    mimetype: req.file.mimetype,
+                    originalname: req.file.originalname,
+                    path: req.file.path,
+                    size: req.file.size,
+                    width: metadata?.width,
+                    height: metadata?.height,
+                    nuvem: fotoLocal ? false : true,
+                    tipo_foto: 'usuarios'
                 });
+            } catch (error: any) {
+                await handleFailedPhotoCreation(req.file.path, req.file.filename, fotoLocal);
+                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: { default: ( error instanceof Error ? error.message : '') } });
             }
 
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                errors: {
-                    default: resultUsuario.message
-                }
-            });
-        }
-
-        return res.status(StatusCodes.CREATED).json(resultUsuario);
-
-    } else {
-
-        const resultFoto = await FotosProvider.createNoFile();
-
-        if (resultFoto instanceof Error) {
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                errors: {
-                    default: resultFoto.message
-                }
-            });
-        }
-
-        const resultUsuario = await UsuariosProvider.create({
-            ...req.body,
-            usuario_cadastrador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
-            usuario_atualizador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
-            id_foto: resultFoto,
-            file: !!req.file,
-            id_copy_regras: req.body.id_copy_regras
-        });
-
-        if (resultUsuario instanceof Error) {
-
-            const deleteFoto = await FotosProvider.deleteById(resultFoto);
-
-            if (deleteFoto instanceof Error) {
-                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                    errors: {
-                        default: resultUsuario.message
-                    }
+            try {
+                const resultUsuario = await UsuariosProvider.create({
+                    ...req.body,
+                    usuario_cadastrador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
+                    usuario_atualizador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
+                    id_foto: typeof resultFoto === 'number' ? resultFoto : 0,
+                    // file: !!req.file,
+                    id_copy_regras: req.body.id_copy_regras
                 });
+                return res.status(StatusCodes.CREATED).json(resultUsuario);
+            } catch (error: any) {
+                await handleFailedUserCreation(req.file.path, req.file.filename, fotoLocal);
+                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: { default: ( error instanceof Error ? error.message : '') } });
+            }
+        } else {
+            const resultFoto = await FotosProvider.createNoFile();
+
+            if (resultFoto instanceof Error) {
+                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: { default: resultFoto.message } });
             }
 
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                errors: {
-                    default: resultUsuario.message
-                }
+            const resultUsuario = await UsuariosProvider.create({
+                ...req.body,
+                usuario_cadastrador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
+                usuario_atualizador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
+                id_foto: resultFoto,
+                id_copy_regras: req.body.id_copy_regras
             });
+
+            if ((resultUsuario instanceof Error)) {
+                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: { default: resultUsuario.message } });
+            }
+
+            return res.status(StatusCodes.CREATED).json(resultUsuario);
         }
-
-        return res.status(StatusCodes.CREATED).json(resultUsuario);
-
+    } catch (error) {
+        console.error('Error in create function:', error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: { default: 'Erro interno no servidor' } });
     }
-
 };
 
+async function handleFailedUserCreation(filePath: string | undefined, fileName: string | undefined, fotoLocal: boolean): Promise<void> {
+    if (filePath && fileName) {
+        await handleFailedPhotoCreation(filePath, fileName, fotoLocal);
+    }
+    // Additional cleanup or actions if needed
+}
+
+async function handleFailedPhotoCreation(filePath: string, fileName: string, fotoLocal: boolean): Promise<void> {
+    if (filePath && fileName) {
+        if (fotoLocal) {
+            await deleteArquivoLocal(filePath, fileName);
+        } else {
+            await DeleteArquivoFirebase(filePath, fileName);
+        }
+        await FotosProvider.deleteByFilename(fileName);
+    }
+}

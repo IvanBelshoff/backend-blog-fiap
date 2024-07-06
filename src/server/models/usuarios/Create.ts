@@ -5,93 +5,77 @@ import { PasswordCrypto } from '../../shared/services';
 import { Permissao, Regra } from '../../database/entities';
 
 interface IFoto extends IBodyCreateUsuarios {
-    id_foto: number
-    file: boolean
+    id_foto?: number; // tornando opcional para tratamento mais flexível
+    id_copy_regras?: number;
 }
 
-const regrasCopiadas = async (id?: number): Promise<Error | { regras: Regra[]; permissoes: Permissao[]; }> => {
+const findPhotoById = async (id?: number) => {
+    if (!id) return undefined;
 
-    if (id) {
-
-        const usuarioCopiado = await usuarioRepository.findOne({
-            relations: {
-                regra: true,
-                permissao: true
-            },
-            where: {
-                id: id
-            }
-        });
-
-        if (!usuarioCopiado) {
-            return new Error('Usuário copiado não localizado');
+    return await fotoRepository.findOne({
+        where: {
+            id: id
         }
+    });
+};
 
-        return {
-            regras: usuarioCopiado.regra || [],
-            permissoes: usuarioCopiado.permissao || []
-        };
+const findUserCopyInfo = async (id?: number) => {
+    if (!id) {
+        return { regras: [], permissoes: [] };
+    }
+
+    const usuarioCopiado = await usuarioRepository.findOne({
+        relations: {
+            regra: true,
+            permissao: true
+        },
+        where: {
+            id: id
+        }
+    });
+
+    if (!usuarioCopiado) {
+        throw new Error('Usuário copiado não localizado');
     }
 
     return {
-        regras: [],
-        permissoes: []
+        regras: usuarioCopiado.regra || [],
+        permissoes: usuarioCopiado.permissao || []
     };
 };
 
 export const create = async (usuario: IFoto): Promise<number | Error> => {
-
     try {
-
         const { id_foto, id_copy_regras } = usuario;
 
         const hashedPassword = await PasswordCrypto.hashPassword(String(usuario.senha));
+        
+        // Encontra a foto cadastrada, se houver
+        const fotoCadastrada = await findPhotoById(id_foto);
 
-        const fotoCadastrada = await fotoRepository.findOne({
-            where: {
-                id: id_foto
-            }
-        });
-
-        if (!fotoCadastrada) {
-            const erro = {
-                default: 'Nenhuma foto cadastrada com este ID',
-            };
-
-            return new Error(JSON.stringify(erro));
-        }
-
-        const regrasEPermissoes = await regrasCopiadas(id_copy_regras);
-
-        if (regrasEPermissoes instanceof Error) {
-
-            return new Error(regrasEPermissoes.message);
-        }
+        // Obtém informações de regras e permissões do usuário copiado, se houver
+        const { regras, permissoes } = await findUserCopyInfo(id_copy_regras);
 
         const newUsuario = usuarioRepository.create({
             ...usuario,
             senha: hashedPassword,
-            regra: regrasEPermissoes.regras,
-            permissao: regrasEPermissoes.permissoes,
+            regra: regras,
+            permissao: permissoes,
             usuario_atualizador: usuario.usuario_atualizador,
             usuario_cadastrador: usuario.usuario_cadastrador,
-            foto: fotoCadastrada
+            foto: fotoCadastrada || undefined // evita atribuir null em caso de não encontrar foto
         });
 
         const result = await usuarioRepository.save(newUsuario);
 
-        if (typeof result === 'object') {
+        if (typeof result === 'object' && result.id) {
             return result.id;
-        } else if (typeof result === 'number') {
-            return result;
         }
 
-        return new Error('Erro ao cadastrar o registro');
+        throw new Error('Erro ao cadastrar o registro');
 
     } catch (error) {
-
-        console.log(error);
-
-        return new Error('Erro ao cadastrar o registro');
+        console.error(error);
+        throw new Error(error instanceof Error ? error.message : '');
     }
 };

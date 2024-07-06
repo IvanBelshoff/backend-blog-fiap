@@ -17,7 +17,7 @@ export const create = async (foto: IFile): Promise<number | Error> => {
         });
 
         if (fotosCadastradas[1] > 0) {
-            return new Error('Foto já cadastrada');
+            throw new Error('Foto já cadastrada');
         }
 
         const newFoto = fotoRepository.create({
@@ -34,16 +34,14 @@ export const create = async (foto: IFile): Promise<number | Error> => {
 
         const result = await fotoRepository.save(newFoto);
 
-        if (typeof result === 'object') {
+        if (typeof result === 'object' && result.id) {
             return result.id;
-        } else if (typeof result === 'number') {
-            return result;
+        } else {
+            throw new Error('Erro ao cadastrar/salvar foto');
         }
-
-        return new Error('Erro ao cadastrar ao salvar foto');
 
     } catch (error) {
         console.log(error);
-        return new Error('Erro ao cadastrar ao salvar foto');
+        throw new Error('Erro ao cadastrar/salvar foto');
     }
 };
