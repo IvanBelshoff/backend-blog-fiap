@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
+# Certifique-se de que o TypeScript está instalado globalmente
+RUN npm install -g typescript
+
 # Copy all files from the current directory to the working directory
 COPY . .
 
