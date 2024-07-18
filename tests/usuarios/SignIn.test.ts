@@ -9,6 +9,7 @@ import { usuarioRepository } from '../../src/server/database/repositories';
 describe('Usuários - SignIn', () => {
 
     const user = new Usuario();
+    
     const plainPassword = '123456'; // Definindo uma senha fixa para os testes
 
     beforeAll(async () => {
