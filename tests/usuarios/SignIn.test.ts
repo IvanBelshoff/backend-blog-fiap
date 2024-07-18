@@ -2,7 +2,6 @@ import { StatusCodes } from 'http-status-codes';
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import { testServer } from '../jest.setup';
 
-import { PasswordCrypto } from '../../src/server/shared/services';
 import { Usuario } from '../../src/server/database/entities';
 import { usuarioRepository } from '../../src/server/database/repositories';
 
@@ -24,13 +23,13 @@ describe('Usuários - SignIn', () => {
         user.sobrenome = faker.person.lastName();
         user.email = faker.internet.email({ firstName: user.nome, lastName: user.sobrenome });
         user.bloqueado = false;
-        user.senha = await PasswordCrypto.hashPassword(plainPassword);
+        user.senha = plainPassword;
 
         const createUser = await testServer.post('/usuarios')
             .send({
                 nome: user.nome,
                 sobrenome: user.sobrenome,
-                senha: plainPassword, // Usando a senha em texto plano aqui
+                senha: user.senha, // Usando a senha em texto plano aqui
                 email: user.email,
                 bloqueado: user.bloqueado
             })
