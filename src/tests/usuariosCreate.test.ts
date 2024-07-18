@@ -180,8 +180,8 @@ describe('create', () => {
     
     it('should handle invalid input data', async () => {
         req.body.senha = 'email_invalido';
-        req.body.nome = 'Oi';
-        req.body.senha = 'cinco';
+        req.body.nome = 'tre';
+        req.body.senha = '123456';
         req.body.sobrenome = null;
         
         await create(req as Request, res as Response);

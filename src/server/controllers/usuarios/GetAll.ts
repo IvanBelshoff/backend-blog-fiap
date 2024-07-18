@@ -26,11 +26,11 @@ export const getAll = async (req: Request<{}, {}, {}, IQueryGetAllUsuarios>, res
 
     if (result instanceof Error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            errors: { default: result.message }
+            errors: { default: 'Erro ao recuperar os usuários' }
         });
     } else if (count instanceof Error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            errors: { default: count.message }
+            errors: { default: 'Erro ao recuperar a quantidade de usuários' }
         });
     }
     
