@@ -2,20 +2,23 @@ import { usuarioRepository } from '../../database/repositories';
 
 export const count = async (filter?: string): Promise<number | Error> => {
     try {
-
         const result = usuarioRepository.createQueryBuilder('usuario')
-            .select('usuario');
+            .select('COUNT(usuario.id)');
 
         if (typeof filter === 'string') {
-            result.andWhere('LOWER(usuario.nome) LIKE LOWER(:nome)', { nome: `%${filter}%` });
+            result.andWhere('(LOWER(usuario.nome) LIKE LOWER(:filter) OR LOWER(usuario.sobrenome) LIKE LOWER(:filter) OR LOWER(usuario.email) LIKE LOWER(:filter))', { filter: `%${filter}%` });
         }
 
-        const count = await result.getCount();
+        const totalCount = await result.getRawOne();
 
-        return count;
+        if (!totalCount) {
+            return 0;
+        }
+
+        return parseInt(totalCount.count, 10);
 
     } catch (error) {
-        console.log(error);
+        console.error('Erro ao consultar a quantidade total de registros:', error);
         return new Error('Erro ao consultar a quantidade total de registros');
     }
 };

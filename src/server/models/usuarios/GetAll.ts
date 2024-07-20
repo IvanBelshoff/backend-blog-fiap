@@ -1,28 +1,27 @@
 import { Usuario } from '../../database/entities';
 import { usuarioRepository } from '../../database/repositories';
 
-
 export const getAll = async (
-    page?: number,
-    limit?: number,
-    filter?: string): Promise<Omit<Usuario, 'senha' | 'foto'>[] | Error> => {
+    page: number = 1,
+    limit: number = 10,
+    filter: string = ''
+): Promise<{ usuarios: Omit<Usuario, 'senha' | 'foto'>[], totalCount: number } | Error> => {
     try {
-
         const result = usuarioRepository.createQueryBuilder('usuario')
-            .orderBy('usuario.nome', 'DESC');
+            .orderBy('usuario.nome', 'ASC'); // Ordenando por nome ascendente por padrão
 
-        if (page && typeof page == 'string' && limit && typeof limit == 'string') {
-            result.take(page * limit);
-            result.take(limit);
+        // Aplicar paginação
+        result.skip((page - 1) * limit).take(limit);
+
+        // Aplicar filtro por nome, sobrenome ou email
+        if (filter.trim() !== '') {
+            result.andWhere('(LOWER(usuario.nome) LIKE LOWER(:filtro) OR LOWER(usuario.sobrenome) LIKE LOWER(:filtro) OR LOWER(usuario.email) LIKE LOWER(:filtro))', { filtro: `%${filter}%` });
         }
 
-        if (typeof filter === 'string') {
-            result.andWhere('LOWER(usuario.nome) LIKE LOWER(:nome)', { nome: `%${filter}%` });
-        }
+        // Obter usuários e total de registros
+        const [usuarios, totalCount] = await result.getManyAndCount();
 
-        const usuarios = await result.getMany();
-
-
+        // Mapear usuários para remover campos sensíveis
         const newUsers: Omit<Usuario, 'senha' | 'foto'>[] = usuarios.map(user => ({
             id: user.id,
             nome: user.nome,
@@ -38,10 +37,10 @@ export const getAll = async (
             usuario_cadastrador: user.usuario_cadastrador
         }));
 
-        return newUsers;
+        return { usuarios: newUsers, totalCount };
 
     } catch (error) {
-        console.log(error);
+        console.error('Erro ao consultar os registros:', error);
         return new Error('Erro ao consultar os registros');
     }
 };
