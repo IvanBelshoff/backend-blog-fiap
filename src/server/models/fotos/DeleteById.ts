@@ -13,7 +13,11 @@ export const deleteById = async (id: number): Promise<void | Error> => {
             return new Error('foto não localizada');
         }
 
-        await fotoRepository.delete({ id: id });
+        const deleteFoto = await fotoRepository.delete({ id: foto.id });
+
+        if (deleteFoto instanceof Error) {
+            return new Error(deleteFoto.message);
+        }
 
         return;
 

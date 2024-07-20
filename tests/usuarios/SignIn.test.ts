@@ -3,12 +3,13 @@ import { faker } from '@faker-js/faker/locale/pt_BR';
 import { testServer } from '../jest.setup';
 
 import { Usuario } from '../../src/server/database/entities';
-import { usuarioRepository } from '../../src/server/database/repositories';
 
 describe('Usuários - SignIn', () => {
 
     const user = new Usuario();
     const plainPassword = '123456'; // Definindo uma senha fixa para os testes
+    let accessToken = '';
+    let userId = '';
 
     beforeAll(async () => {
 
@@ -17,7 +18,7 @@ describe('Usuários - SignIn', () => {
             email: process.env.EMAIL_USER_DEFAULT,
         });
 
-        const accessToken = loginUserDefault.body.accessToken;
+        accessToken = loginUserDefault.body.accessToken;
 
         user.nome = faker.person.firstName();
         user.sobrenome = faker.person.lastName();
@@ -35,19 +36,9 @@ describe('Usuários - SignIn', () => {
             })
             .set({ Authorization: `Bearer ${accessToken}` });
 
-        console.log(`Usuário teste criado: ${JSON.stringify(createUser.body)}`);
-    });
+        userId = createUser.body;
 
-    afterAll(async () => {
-
-        const usuario = await usuarioRepository.findOne({ where: { email: user.email } });
-
-        if (usuario) {
-            const deleteUser = await usuarioRepository.delete({ id: usuario.id });
-            console.log(`Usuário teste deletado: ${deleteUser.affected}`);
-        } else {
-            console.log('Usuário teste não localizado');
-        }
+        console.log(`Usuário teste criado: ${createUser.body}`);
 
     });
 
@@ -125,5 +116,15 @@ describe('Usuários - SignIn', () => {
             });
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
         expect(res1.body).toHaveProperty('errors.body.email');
+    });
+
+    it('Apagando usuário', async () => {
+
+        const deleteUser = await testServer
+            .delete(`/usuarios/${userId}`)
+            .set({ Authorization: `Bearer ${accessToken}` })
+            .send();
+
+        expect(deleteUser.statusCode).toEqual(StatusCodes.NO_CONTENT);
     });
 });
