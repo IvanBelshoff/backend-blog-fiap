@@ -38,7 +38,7 @@ export const updateById = async (req: Request<IParamsIdGlobal, {}, IBodyUpdateBy
 
     const validaEmail = await UsuariosProvider.validaEmailUsuario(req.body.email, req.params.id);
 
-    if (validaEmail instanceof Error) {
+    if (validaEmail) {
 
         if (req.file) {
             const deleteFoto = String(fotoLocal) == 'true' ? await deleteArquivoLocal(req.file.path, req.file.filename) : await DeleteArquivoFirebase(req.file.path, req.file.filename);
@@ -49,7 +49,7 @@ export const updateById = async (req: Request<IParamsIdGlobal, {}, IBodyUpdateBy
         }
 
         return res.status(StatusCodes.BAD_REQUEST).json({
-            errors: JSON.parse(validaEmail.message)
+            errors: JSON.parse(validaEmail)
         });
     }
 
