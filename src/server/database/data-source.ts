@@ -27,8 +27,8 @@ const options_db_nuvem: DataSourceOptions & SeederOptions = {
 
 const options_db_local: DataSourceOptions & SeederOptions = {
     type: 'postgres',
-    host: process.env.DB_HOST,
-    port: port,
+    host: process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'localhost' ? 'localhost': process.env.DB_HOST,
+    port: process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'localhost' ? 5436 : port,
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
@@ -46,9 +46,6 @@ export const AppDataSource = new DataSource(selectedOptions);
 
 export const initializeDatabase = async () => {
     try {
-        console.log('DB_HOST:', process.env.DB_HOST);
-        console.log('Selected DB Options:', selectedOptions);
-        
         const initialOptions = { ...selectedOptions, database: process.env.DB_NAME };
         const initialDataSource = new DataSource(initialOptions);
         if (process.env.NODE_ENV !== 'test') {
