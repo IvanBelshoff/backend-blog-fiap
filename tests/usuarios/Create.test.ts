@@ -36,11 +36,7 @@ describe('create', () => {
             .field('senha', user.senha || '')
             .field('email', user.email)
             .field('bloqueado', user.bloqueado)
-<<<<<<< Updated upstream
-            .attach('foto', path.resolve(__dirname, '..', '..', 'build/server/shared/data/default/profile.jpg'))
-=======
             .attach('foto', path.join(__dirname, '../', '../', './src/server/shared/data/default/profile.jpg'))
->>>>>>> Stashed changes
             .set({ Authorization: `Bearer ${accessToken}` });
 
         userId = res1.body;
