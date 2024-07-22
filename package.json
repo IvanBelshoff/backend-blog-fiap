@@ -7,7 +7,7 @@
     "dev": "ts-node-dev ./src/index.ts",
     "start": "node ./build/index.js",
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --coverage --coverageReporters='text-summary'",
     "seed": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./src/server/database/data-source.ts",
     "seed:posts": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run  -d ./src/server/database/data-source.ts --name src/server/database/seeds/post.seeder.ts",
     "seed:usuarios": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run  -d ./src/server/database/data-source.ts --name src/server/database/seeds/user.seeder.ts",

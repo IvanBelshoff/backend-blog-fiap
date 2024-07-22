@@ -23,7 +23,6 @@ describe('create', () => {
 
     it('criar usuário e foto com sucesso', async () => {
 
-        console.log(path.resolve(__dirname, '..', '..', 'src/server/shared/data/default/profile.jpg'));
         user.nome = faker.person.firstName();
         user.sobrenome = faker.person.lastName();
         user.email = faker.internet.email({ firstName: user.nome, lastName: user.sobrenome });
@@ -37,7 +36,7 @@ describe('create', () => {
             .field('senha', user.senha || '')
             .field('email', user.email)
             .field('bloqueado', user.bloqueado)
-            .attach('foto', path.resolve(__dirname, '..', '..', 'data/Ivan.jpg'))
+            .attach('foto', path.resolve(__dirname, '..', '..', 'build/server/shared/data/default/profile.jpg'))
             .set({ Authorization: `Bearer ${accessToken}` });
 
         userId = res1.body;
