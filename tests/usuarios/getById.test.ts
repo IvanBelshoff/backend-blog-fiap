@@ -1,46 +1,75 @@
 import { StatusCodes } from 'http-status-codes';
+import { faker } from '@faker-js/faker/locale/pt_BR';
 import { testServer } from '../jest.setup';
-import { Timestamp } from 'typeorm';
 import { Usuario } from '../../src/server/database/entities';
-
-let accessToken: string = '';
 
 
 describe('GET /usuarios/id/:id', () => {
 
+    const user = new Usuario();
+    const plainPassword = '123456'; // Definindo uma senha fixa para os testes
+    let accessToken = '';
+    let userId = '';
 
     beforeAll(async () => {
-        
+
         const loginUserDefault = await testServer.post('/entrar').send({
             senha: process.env.SENHA_USER_DEFAULT,
             email: process.env.EMAIL_USER_DEFAULT,
         });
+
         accessToken = loginUserDefault.body.accessToken;
+
+        user.nome = faker.person.firstName();
+        user.sobrenome = faker.person.lastName();
+        user.email = faker.internet.email({ firstName: user.nome, lastName: user.sobrenome });
+        user.bloqueado = false;
+        user.senha = plainPassword;
+
+        const createUser = await testServer.post('/usuarios')
+            .send({
+                nome: user.nome,
+                sobrenome: user.sobrenome,
+                senha: user.senha, // Usando a senha em texto plano aqui
+                email: user.email,
+                bloqueado: user.bloqueado
+            })
+            .set({ Authorization: `Bearer ${accessToken}` });
+
+        userId = createUser.body;
     });
 
 
     it('should return 404 error when accessing /usuarios/id without ID', async () => {
         const res = await testServer.get('/usuarios/id/')
             .set({ Authorization: `Bearer ${accessToken}` });
-        expect(res.status).toEqual(StatusCodes.NOT_FOUND);
+        expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
+        expect(res.body).toEqual({
+            errors: {
+                params: {
+                    id: 'Formato digitado é invalido'
+                }
+            }
+        });
     });
 
     it('should return 500 error when UsuariosProvider.getById throws an error', async () => {
-        const invalidId = '999999'; 
-        const res = await testServer.get(`/usuarios/id/${invalidId}`)
+        const invalidId = '999999';
+        const res = await testServer.get(`/usuarios/${invalidId}`)
             .set({ Authorization: `Bearer ${accessToken}` });
 
         expect(res.status).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
         expect(res.body).toEqual({
             errors: {
-                default: expect.any(String)
+                default: 'Usuario não encontrado'
             }
         });
     });
 
     it('should return user data when getById returns successfully', async () => {
-        const validId = '6';
-        const res = await testServer.get(`/usuarios/id/${validId}`)
+        const validId = userId;
+
+        const res = await testServer.get(`/usuarios/${validId}`)
             .set({ Authorization: `Bearer ${accessToken}` });
         expect(res.status).toEqual(StatusCodes.OK);
         expect(res.body).toHaveProperty('id');
@@ -72,16 +101,21 @@ describe('GET /usuarios/id/:id', () => {
     });
 
     it('should return 400 error when id parameter is less than or equal to 0', async () => {
-        const invalidId = 0; 
-        console.log(`/usuarios/id/${invalidId}`);
-        const res = await testServer.get(`/usuarios/id/${invalidId}`)
+        const invalidId = 0;
+        const res = await testServer.get(`/usuarios/${invalidId}`)
             .set({ Authorization: `Bearer ${accessToken}` });
-        console.log('res.body.errors: ', res.body);
-        let error;
-        if (res.body.errors && 'params' in res.body.errors) {
-            error = res.body.errors?.params;
-        }
+
         expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
-        expect(error).toEqual({'id': 'Deve ser maior que 0'});
+
+    });
+
+    it('Apagando usuário', async () => {
+
+        const deleteUser = await testServer
+            .delete(`/usuarios/${userId}`)
+            .set({ Authorization: `Bearer ${accessToken}` })
+            .send();
+
+        expect(deleteUser.statusCode).toEqual(StatusCodes.NO_CONTENT);
     });
 });

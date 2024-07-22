@@ -17,7 +17,7 @@ export const getAll = async (
         }
 
         if (typeof filter === 'string') {
-            result.andWhere('LOWER(usuario.nome) LIKE LOWER(:nome)', { nome: `%${filter}%` });
+            result.andWhere('(LOWER(usuario.nome) LIKE LOWER(:filter) OR LOWER(usuario.sobrenome) LIKE LOWER(:filter) OR LOWER(usuario.email) LIKE LOWER(:filter))', { filter: `%${filter}%` });
         }
 
         const usuarios = await result.getMany();

@@ -7,7 +7,7 @@ export const count = async (filter?: string): Promise<number | Error> => {
             .select('usuario');
 
         if (typeof filter === 'string') {
-            result.andWhere('LOWER(usuario.nome) LIKE LOWER(:nome)', { nome: `%${filter}%` });
+            result.andWhere('(LOWER(usuario.nome) LIKE LOWER(:filter) OR LOWER(usuario.sobrenome) LIKE LOWER(:filter) OR LOWER(usuario.email) LIKE LOWER(:filter))', { filter: `%${filter}%` });
         }
 
         const count = await result.getCount();
