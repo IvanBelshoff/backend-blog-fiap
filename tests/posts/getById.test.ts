@@ -42,8 +42,8 @@ describe('GET /posts/:id', () => {
         expect(error).toEqual('{\"errors\":{\"default\":\"Postagem não encontrada\"}}');
     });
 
-    it('should return user data when getById returns successfully', async () => {
-        const validId = '6';
+    it('should return post data when getById returns successfully', async () => {
+        const validId = '1';
         const res = await testServer.get(`/posts/${validId}`)
             .set({ Authorization: `Bearer ${accessToken}` });
 
