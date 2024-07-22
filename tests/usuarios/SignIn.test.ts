@@ -38,8 +38,6 @@ describe('Usuários - SignIn', () => {
 
         userId = createUser.body;
 
-        console.log(`Usuário teste criado: ${createUser.body}`);
-
     });
 
     it('Faz login', async () => {

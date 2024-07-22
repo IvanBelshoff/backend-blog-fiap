@@ -159,8 +159,7 @@ describe('getAll', () => {
 
         const res = await testServer.get(`/usuarios${queryString}`)
             .set({ Authorization: `Bearer ${accessToken}` });
-
-        console.log(res.body);
+            
         expect(res.statusCode).toEqual(StatusCodes.OK);
         expect(Array.isArray(res.body)).toBeTruthy();
         expect(Number(res.headers['x-total-count'])).toBeGreaterThan(0);
