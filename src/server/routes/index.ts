@@ -340,7 +340,7 @@ router.get('/usuarios', EnsureAuthenticated, Regras(['REGRA_USUARIO']), Usuarios
  *       200:
  *         description: Detalhes do usuário
  */
-router.get('/usuarios/id/:id', EnsureAuthenticated, UsuariosController.getByIdValidation, UsuariosController.getById);
+router.get('/usuarios/:id', EnsureAuthenticated, UsuariosController.getByIdValidation, UsuariosController.getById);
 
 /**
  * @swagger

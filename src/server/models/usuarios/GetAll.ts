@@ -1,27 +1,28 @@
 import { Usuario } from '../../database/entities';
 import { usuarioRepository } from '../../database/repositories';
 
+
 export const getAll = async (
-    page: number = 1,
-    limit: number = 10,
-    filter: string = ''
-): Promise<{ usuarios: Omit<Usuario, 'senha' | 'foto'>[], totalCount: number } | Error> => {
+    page?: number,
+    limit?: number,
+    filter?: string): Promise<Omit<Usuario, 'senha' | 'foto'>[] | Error> => {
     try {
+
         const result = usuarioRepository.createQueryBuilder('usuario')
-            .orderBy('usuario.nome', 'ASC'); // Ordenando por nome ascendente por padrão
+            .orderBy('usuario.nome', 'DESC');
 
-        // Aplicar paginação
-        result.skip((page - 1) * limit).take(limit);
-
-        // Aplicar filtro por nome, sobrenome ou email
-        if (filter.trim() !== '') {
-            result.andWhere('(LOWER(usuario.nome) LIKE LOWER(:filtro) OR LOWER(usuario.sobrenome) LIKE LOWER(:filtro) OR LOWER(usuario.email) LIKE LOWER(:filtro))', { filtro: `%${filter}%` });
+        if (page && typeof page == 'string' && limit && typeof limit == 'string') {
+            result.take(page * limit);
+            result.take(limit);
         }
 
-        // Obter usuários e total de registros
-        const [usuarios, totalCount] = await result.getManyAndCount();
+        if (typeof filter === 'string') {
+            result.andWhere('LOWER(usuario.nome) LIKE LOWER(:nome)', { nome: `%${filter}%` });
+        }
 
-        // Mapear usuários para remover campos sensíveis
+        const usuarios = await result.getMany();
+
+
         const newUsers: Omit<Usuario, 'senha' | 'foto'>[] = usuarios.map(user => ({
             id: user.id,
             nome: user.nome,
@@ -37,10 +38,10 @@ export const getAll = async (
             usuario_cadastrador: user.usuario_cadastrador
         }));
 
-        return { usuarios: newUsers, totalCount };
+        return newUsers;
 
     } catch (error) {
-        console.error('Erro ao consultar os registros:', error);
+        console.log(error);
         return new Error('Erro ao consultar os registros');
     }
 };

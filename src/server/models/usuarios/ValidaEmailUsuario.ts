@@ -1,51 +1,74 @@
 import { IEmailValidaEmailUsuario } from '../../shared/interfaces';
 import { usuarioRepository } from '../../database/repositories';
 
-export const validaEmailUsuario = async (email: string, id?: number): Promise<string> => {
+export const validaEmailUsuario = async (email: string, id?: number): Promise<void | Error> => {
+
     try {
+
         if (id) {
+
             const usuarioUpdate = await usuarioRepository.findOne({
                 where: {
                     id: id
                 }
             });
 
-            const usuarioCadastrado = await usuarioRepository.findAndCount({
+            const usuarioCasdastrado = await usuarioRepository.findAndCount({
                 where: [
                     { email: email }
                 ]
             });
 
-            const camposDuplicados = usuarioCadastrado[0].filter(usuario => usuario.email == email && usuario.email != usuarioUpdate?.email);
+            const propriedades: IEmailValidaEmailUsuario = {};
+
+            const camposDuplicados = usuarioCasdastrado[0].filter(usuario => usuario.email == email && usuario.email != usuarioUpdate?.email);
 
             if (camposDuplicados.length > 0) {
-                return 'Já existe usuário com este E-mail.';
+                if (camposDuplicados.some(usuario => usuario.email === email)) {
+                    propriedades.email = 'Já existe usuário com este E-mail.';
+                }
             }
 
-            if (usuarioCadastrado[1] > 0 && camposDuplicados.length > 0) {
-                return 'Usuário já cadastrado com essas informações.';
+            if (usuarioCasdastrado[1] > 0 && usuarioCasdastrado[0].filter(usuario => usuario.email == email && usuario.email != usuarioUpdate?.email).length > 0) {
+
+                const erro = {
+                    default: 'Usuário já cadastrado com essas informações.',
+                    body: propriedades
+                };
+
+                return new Error(JSON.stringify(erro));
             }
         } else {
-            const usuarioCadastrado = await usuarioRepository.findAndCount({
+            const usuarioCasdastrado = await usuarioRepository.findAndCount({
                 where: [
                     { email: email }
                 ]
             });
 
-            const camposDuplicados = usuarioCadastrado[0].filter(usuario => usuario.email == email);
+            const propriedades: IEmailValidaEmailUsuario = {};
+
+            const camposDuplicados = usuarioCasdastrado[0].filter(usuario => usuario.email == email);
 
             if (camposDuplicados.length > 0) {
-                return 'Já existe usuário com este E-mail.';
+                if (camposDuplicados.some(usuario => usuario.email === email)) {
+                    propriedades.email = 'Já existe usuário com este E-mail.';
+                }
             }
 
-            if (usuarioCadastrado[1] > 0 && camposDuplicados.length > 0) {
-                return 'Usuário já cadastrado com essas informações.';
+            if (usuarioCasdastrado[1] > 0 && usuarioCasdastrado[0].filter(usuario => usuario.email == email).length > 0) {
+
+                const erro = {
+                    default: 'Usuário já cadastrado com essas informações.',
+                    body: propriedades
+                };
+
+                return new Error(JSON.stringify(erro));
             }
         }
 
-        return ''; // Retorna string vazia quando não há erros
+
     } catch (error) {
         console.log(error);
-        return 'Erro ao verificar o e-mail'; // Retorna mensagem de erro genérica
+        return new Error('Erro ao verificar o e-mail');
     }
 };
