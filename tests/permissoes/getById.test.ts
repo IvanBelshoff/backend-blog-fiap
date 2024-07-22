@@ -48,7 +48,6 @@ describe('GET /permissoes/:id', () => {
         const validId = '6';
         const res = await testServer.get(`/permissoes/${validId}`)
             .set({ Authorization: `Bearer ${accessToken}` });
-        console.log("res: ", res)
         expect(res.status).toEqual(StatusCodes.OK);
         expect(res.body).toHaveProperty('id');
         expect(res.body).toHaveProperty('nome');
@@ -65,10 +64,8 @@ describe('GET /permissoes/:id', () => {
 
     it('should return 500 error when id parameter is less than or equal to 0', async () => {
         const invalidId = 0; 
-        console.log(`/permissoes/${invalidId}`);
         const res = await testServer.get(`/permissoes/${invalidId}`)
             .set({ Authorization: `Bearer ${accessToken}` });
-        console.log('res.body.errors: ', res.body);
         let error;
         if (res.body.errors && 'params' in res.body.errors) {
             error = res.body.errors?.params;
