@@ -30,7 +30,7 @@ export const deleteById = async (id: number): Promise<void | Error> => {
                 return new Error(resultDeleteFoto.message);
             }
 
-            const foto = FotosProvider.deleteById(postagem.foto.id);
+            const foto = await FotosProvider.deleteById(postagem.foto.id);
 
             if (foto instanceof Error) {
                 return new Error(foto.message);

@@ -19,30 +19,6 @@ describe('create', () => {
         accessToken = loginUserDefault.body.accessToken;
     });
 
-/*
-    it('criar usuário e foto com sucesso', async () => {
-
-        user.nome = faker.person.firstName();
-        user.sobrenome = faker.person.lastName();
-        user.email = faker.internet.email({ firstName: user.nome, lastName: user.sobrenome });
-        user.bloqueado = false;
-        user.senha = plainPassword;
-
-        const res1 = await testServer.post('/usuarios')
-            .send({
-                nome: user.nome,
-                sobrenome: user.sobrenome,
-                senha: user.senha, // Usando a senha em texto plano aqui
-                email: user.email,
-                bloqueado: user.bloqueado
-            })
-            .set({ Authorization: `Bearer ${accessToken}` });
-
-        userId = res1.body;
-
-        expect(res1.statusCode).toEqual(StatusCodes.CREATED);
-    });
-    */
     it('criar usuário e foto com sucesso', async () => {
 
         user.nome = faker.person.firstName();
@@ -62,8 +38,6 @@ describe('create', () => {
             .set({ Authorization: `Bearer ${accessToken}` });
 
         userId = res1.body;
-
-        console.log(res1.body);
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED);
     });
