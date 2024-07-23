@@ -61,6 +61,8 @@ describe('create', () => {
 
         userId = res1.body;
 
+        console.log(res1.body);
+        
         expect(res1.statusCode).toEqual(StatusCodes.CREATED);
     });
 
