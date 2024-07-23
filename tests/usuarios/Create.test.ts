@@ -26,10 +26,7 @@ describe('create', () => {
         path.resolve(__dirname, '..', '..', 'src/server/shared/data/default/profile.jpg')
     ];
 
-
     beforeAll(async () => {
-
-
         const loginUserDefault = await testServer.post('/entrar').send({
             senha: process.env.SENHA_USER_DEFAULT,
             email: process.env.EMAIL_USER_DEFAULT,
