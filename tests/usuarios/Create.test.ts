@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Usuario } from '../../src/server/database/entities';
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import { testServer } from '../jest.setup';
+import path from 'path';
 
 describe('create', () => {
     const user = new Usuario();
@@ -18,7 +19,7 @@ describe('create', () => {
         accessToken = loginUserDefault.body.accessToken;
     });
 
-
+/*
     it('criar usuário e foto com sucesso', async () => {
 
         user.nome = faker.person.firstName();
@@ -41,7 +42,7 @@ describe('create', () => {
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED);
     });
-    /*
+    */
     it('criar usuário e foto com sucesso', async () => {
 
         user.nome = faker.person.firstName();
@@ -65,7 +66,7 @@ describe('create', () => {
         console.log(res1.body);
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED);
-    });*/
+    });
 
     it('Apagando usuário', async () => {
         const deleteUser = await testServer
