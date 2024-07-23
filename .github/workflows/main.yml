@@ -8,38 +8,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-          PORT: ${{ secrets.PORT }}
-          HOST: ${{ secrets.HOST }}
-          NODE_ENV: ${{ secrets.NODE_ENV }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASS: ${{ secrets.DB_PASS }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          NAME_USER_DEFAULT: ${{ secrets.NAME_USER_DEFAULT }}
-          EMAIL_USER_DEFAULT: ${{ secrets.EMAIL_USER_DEFAULT }}
-          SOBRENOME_USER_DEFAULT: ${{ secrets.SOBRENOME_USER_DEFAULT }}
-          SENHA_USER_DEFAULT: ${{ secrets.SENHA_USER_DEFAULT }}
-          SALVAR_FOTO_LOCAL: ${{ secrets.SALVAR_FOTO_LOCAL }}
-          URL: ${{ secrets.URL }}
-          GOOGLE_HOST: ${{ secrets.GOOGLE_HOST }}
-          GOOGLE_PORT: ${{ secrets.GOOGLE_PORT }}
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-          REGRAS_PERMISSOES: ${{ secrets.REGRAS_PERMISSOES }}
-          TYPE: ${{ secrets.TYPE }}
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          AUTH_URI: ${{ secrets.AUTH_URI }}
-          TOKEN_URI: ${{ secrets.TOKEN_URI }}
-          AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
-          CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
-          UNIVERSE_DOMAIN: ${{ secrets.UNIVERSE_DOMAIN }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -47,50 +15,50 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4.0.3
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Install dependencies
         run: npm install
 
       - name: Run tests with environment variables
         run: |
-          PORT=$PORT \
-          HOST=$HOST \
-          NODE_ENV=$NODE_ENV \
-          DB_HOST=$DB_HOST \
-          DB_PORT=$DB_PORT \
-          DB_USER=$DB_USER \
-          DB_PASS=$DB_PASS \
-          DB_NAME=$DB_NAME \
-          JWT_SECRET=$JWT_SECRET \
-          NAME_USER_DEFAULT=$NAME_USER_DEFAULT \
-          EMAIL_USER_DEFAULT=$EMAIL_USER_DEFAULT \
-          SOBRENOME_USER_DEFAULT=$SOBRENOME_USER_DEFAULT \
-          SENHA_USER_DEFAULT=$SENHA_USER_DEFAULT \
-          SALVAR_FOTO_LOCAL=$SALVAR_FOTO_LOCAL \
-          URL=$URL \
-          GOOGLE_HOST=$GOOGLE_HOST \
-          GOOGLE_PORT=$GOOGLE_PORT \
-          MAIL_USERNAME=$MAIL_USERNAME \
-          MAIL_PASSWORD=$MAIL_PASSWORD \
-          REGRAS_PERMISSOES=$REGRAS_PERMISSOES \
-          TYPE=$TYPE \
-          PROJECT_ID=$PROJECT_ID \
-          PRIVATE_KEY_ID=$PRIVATE_KEY_ID \
-          PRIVATE_KEY=$PRIVATE_KEY \
-          CLIENT_EMAIL=$CLIENT_EMAIL \
-          CLIENT_ID=$CLIENT_ID \
-          AUTH_URI=$AUTH_URI \
-          TOKEN_URI=$TOKEN_URI \
-          AUTH_PROVIDER_X509_CERT_URL=$AUTH_PROVIDER_X509_CERT_URL \
-          CLIENT_X509_CERT_URL=$CLIENT_X509_CERT_URL \
-          UNIVERSE_DOMAIN=$UNIVERSE_DOMAIN \
+          PORT=${{ secrets.PORT }} \
+          HOST=${{ secrets.HOST }} \
+          NODE_ENV=${{ secrets.NODE_ENV }} \
+          DB_HOST=${{ secrets.DB_HOST }} \
+          DB_PORT=${{ secrets.DB_PORT }} \
+          DB_USER=${{ secrets.DB_USER }} \
+          DB_PASS=${{ secrets.DB_PASS }} \
+          DB_NAME=${{ secrets.DB_NAME }} \
+          JWT_SECRET=${{ secrets.JWT_SECRET }} \
+          NAME_USER_DEFAULT=${{ secrets.NAME_USER_DEFAULT }} \
+          EMAIL_USER_DEFAULT=${{ secrets.EMAIL_USER_DEFAULT }} \
+          SOBRENOME_USER_DEFAULT=${{ secrets.SOBRENOME_USER_DEFAULT }} \
+          SENHA_USER_DEFAULT=${{ secrets.SENHA_USER_DEFAULT }} \ 
+          SALVAR_FOTO_LOCAL=${{ secrets.SALVAR_FOTO_LOCAL }} \
+          URL=${{ secrets.URL }} \
+          GOOGLE_HOST=${{ secrets.GOOGLE_HOST }} \
+          GOOGLE_PORT=${{ secrets.GOOGLE_PORT }} \
+          MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
+          MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
+          REGRAS_PERMISSOES=${{ secrets.REGRAS_PERMISSOES }} \
+          TYPE=${{ secrets.TYPE }} \
+          PROJECT_ID=${{ secrets.PROJECT_ID }} \
+          PRIVATE_KEY_ID=${{ secrets.PRIVATE_KEY_ID }} \
+          PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} \
+          CLIENT_EMAIL=${{ secrets.CLIENT_EMAIL }} \
+          CLIENT_ID=${{ secrets.CLIENT_ID }} \
+          AUTH_URI=${{ secrets.AUTH_URI }} \
+          TOKEN_URI=${{ secrets.TOKEN_URI }} \
+          AUTH_PROVIDER_X509_CERT_URL=${{ secrets.AUTH_PROVIDER_X509_CERT_URL }} \
+          CLIENT_X509_CERT_URL=${{ secrets.CLIENT_X509_CERT_URL }} \
+          UNIVERSE_DOMAIN=${{ secrets.UNIVERSE_DOMAIN }} \
           npm test
-        
+
   build:
     runs-on: ubuntu-latest
 
-    needs: test  # Dependência do job 'build' para o job 'test'
+    needs: test # Dependência do job 'build' para o job 'test'
 
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
