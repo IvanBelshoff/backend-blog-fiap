@@ -3,6 +3,8 @@ import { testServer } from '../jest.setup';
 import { Postagem } from '../../src/server/database/entities';
 
 let accessToken: string = '';
+let allPosts: Postagem[] = [];
+let searchTerm: string = '';
 
 describe('searchPosts', () => {
 
@@ -12,11 +14,29 @@ describe('searchPosts', () => {
             email: process.env.EMAIL_USER_DEFAULT,
         });
         accessToken = loginUserDefault.body.accessToken;
+
+        const query = {
+            page: '1',
+            limit: '10',
+            filter: ''
+        };
+    
+        const queryString = `?page=${query.page}&limit=${query.limit}&filter=${query.filter}`;
+    
+        const resGetAll = await testServer.get(`/posts${queryString}`)
+            .set({ Authorization: `Bearer ${accessToken}` });
+
+        allPosts = resGetAll.body;
+
+        const firstPost = allPosts[0];
+        if (firstPost) {
+            searchTerm = firstPost.titulo.split(' ')[0] || firstPost.conteudo.split(' ')[0];
+        }
     });
 
     it('should return posts matching the search term in title or content', async () => {
         const query = {
-            search: 'clarus'
+            search: searchTerm
         };
 
         const queryString = `?search=${query.search}`;
