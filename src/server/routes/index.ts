@@ -467,6 +467,20 @@ router.get('/posts', EnsureAuthenticated, PostagensController.getAllValidation, 
 
 /**
  * @swagger
+ * /posts:
+ *   get:
+ *     summary: Retorna todas as postagens que contenham o termo enviado via query string em search
+ *     tags: [Postagens]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de postagens
+ */
+router.get('/posts/search', EnsureAuthenticated, PostagensController.searchPostsValidation, PostagensController.search);
+
+/**
+ * @swagger
  * /posts/{id}:
  *   get:
  *     summary: Retorna uma postagem pelo ID
