@@ -9,3 +9,7 @@ export interface IQueryGetAllPostagens {
     limit?: number;
     filter?: string;
 }
+
+export interface IQuerySearchPosts {
+    search: string;
+}
