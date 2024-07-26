@@ -110,9 +110,9 @@ const validaRegrasEPermissoes = async (id: number, regrasIds: number[], permisso
 
             const RegrasRemovidas = [...idsRegrasBD].filter(id => !idsRegrasRF.has(id));
 
-            console.log('Regras Mantidas:', RegrasMantidas.length, '(' + RegrasMantidas.join(',') + ')');
-            console.log('Regras Adicionadas:', RegrasAdicionadas.length, '(' + RegrasAdicionadas.join(',') + ')');
-            console.log('Regras Removidas:', RegrasRemovidas.length, '(' + RegrasRemovidas.join(',') + ')');
+            // console.log('Regras Mantidas:', RegrasMantidas.length, '(' + RegrasMantidas.join(',') + ')');
+            // console.log('Regras Adicionadas:', RegrasAdicionadas.length, '(' + RegrasAdicionadas.join(',') + ')');
+            // console.log('Regras Removidas:', RegrasRemovidas.length, '(' + RegrasRemovidas.join(',') + ')');
 
             const idsNovasRegras = [...RegrasMantidas, ...RegrasAdicionadas];
 
@@ -132,9 +132,9 @@ const validaRegrasEPermissoes = async (id: number, regrasIds: number[], permisso
 
             const PermissoessRemovidas = [...idsPermissoesBD].filter(id => !idsPermissoesRF.has(id));
 
-            console.log('Permissoes Mantidas:', PermissoesMantidas.length, '(' + PermissoesMantidas.join(',') + ')');
-            console.log('Permissoes Adicionadas:', PermissoesAdicionadas.length, '(' + PermissoesAdicionadas.join(',') + ')');
-            console.log('Permissoes Removidas:', PermissoessRemovidas.length, '(' + PermissoessRemovidas.join(',') + ')');
+            // console.log('Permissoes Mantidas:', PermissoesMantidas.length, '(' + PermissoesMantidas.join(',') + ')');
+            // console.log('Permissoes Adicionadas:', PermissoesAdicionadas.length, '(' + PermissoesAdicionadas.join(',') + ')');
+            // console.log('Permissoes Removidas:', PermissoessRemovidas.length, '(' + PermissoessRemovidas.join(',') + ')');
 
             const idsNovasPermissoes = [...PermissoesMantidas, ...PermissoesAdicionadas];
 

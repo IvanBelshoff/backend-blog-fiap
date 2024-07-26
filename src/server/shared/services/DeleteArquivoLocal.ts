@@ -4,7 +4,7 @@ export const deleteArquivoLocal = async (path: string, filename: string): Promis
     try {
         // Verifica se o arquivo é 'profile.jpg', caso seja, não permite a exclusão
         if (filename === 'profile.jpg') {
-            console.log('\nFoto padrão não pode ser excluída localmente');
+            // console.log('\nFoto padrão não pode ser excluída localmente');
             return;
         }
 

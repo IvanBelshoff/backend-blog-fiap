@@ -36,7 +36,7 @@ export const deleteById = async (id: number): Promise<void | Error> => {
                 return new Error(foto.message);
             }
 
-            console.log('foto excluida com sucesso');
+            // console.log('foto excluida com sucesso');
         }
 
         const deleteUsuario = await usuarioRepository.delete({ id: id });
