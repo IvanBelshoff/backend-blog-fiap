@@ -16,8 +16,7 @@ export const updateRolesAndPermissionsByIdValidation = validation((getSchema) =>
     }))
 }));
 
-export const updateRolesAndPermissionsById = async (req: Request<IParamsIdGlobal, {}, IBodyUpdateRolesAndPermissionsByIdUsuarios>, res: Response) => {
-
+export const updateRolesAndPermissionsById = async (req: Request<IParamsIdGlobal, IBodyUpdateRolesAndPermissionsByIdUsuarios>, res: Response) => {
     if (!req.params.id) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             errors: {
@@ -25,9 +24,7 @@ export const updateRolesAndPermissionsById = async (req: Request<IParamsIdGlobal
             }
         });
     }
-
     const result = await UsuariosProvider.updateRolesAndPermissionsById(req.params.id, { regras: req.body.regras, permissoes: req.body.permissoes });
-
     if (result instanceof Error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors: {

@@ -5,6 +5,7 @@ import * as GetAll from './GetAll';
 import * as Count from './Count';
 import * as GetById from './GetById';
 import * as UpdateById from './UpdateById';
+import * as Search from './Search';
 
 export const PostagensProvider = {
     ...ValidaEmailUsuario,
@@ -13,5 +14,6 @@ export const PostagensProvider = {
     ...GetAll,
     ...Count,
     ...GetById,
-    ...UpdateById
+    ...UpdateById,
+    ...Search
 };
