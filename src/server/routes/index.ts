@@ -463,7 +463,7 @@ router.post('/posts', EnsureAuthenticated, Regras(['REGRA_PROFESSOR']), Permisso
  *       200:
  *         description: Lista de postagens
  */
-router.get('/posts', EnsureAuthenticated, PostagensController.getAllValidation, PostagensController.getAll);
+router.get('/posts', PostagensController.getAllValidation, PostagensController.getAll);
 
 /**
  * @swagger
@@ -477,7 +477,7 @@ router.get('/posts', EnsureAuthenticated, PostagensController.getAllValidation, 
  *       200:
  *         description: Lista de postagens
  */
-router.get('/posts/search', EnsureAuthenticated, PostagensController.searchPostsValidation, PostagensController.search);
+router.get('/posts/search', PostagensController.searchPostsValidation, PostagensController.search);
 
 /**
  * @swagger
@@ -497,7 +497,7 @@ router.get('/posts/search', EnsureAuthenticated, PostagensController.searchPosts
  *       200:
  *         description: Detalhes da postagem
  */
-router.get('/posts/:id', EnsureAuthenticated, PostagensController.getByIdValidation, PostagensController.getById);
+router.get('/posts/:id', PostagensController.getByIdValidation, PostagensController.getById);
 
 /**
  * @swagger

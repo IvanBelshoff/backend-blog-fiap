@@ -12,7 +12,7 @@ export const getAll = async (
             .orderBy('usuario.nome', 'DESC');
 
         if (page && typeof page == 'string' && limit && typeof limit == 'string') {
-            result.take(page * limit);
+            result.skip((page - 1) * limit)
             result.take(limit);
         }
 

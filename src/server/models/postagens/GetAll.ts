@@ -13,7 +13,6 @@ export const getAll = async (
 
         if (page && typeof page == 'string' && limit && typeof limit == 'string') {
             result.take(page * limit);
-            result.take(limit);
         }
 
         if (typeof filter === 'string') {
