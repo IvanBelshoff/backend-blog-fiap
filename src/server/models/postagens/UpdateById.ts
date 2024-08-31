@@ -25,7 +25,7 @@ export const updateById = async (id: number, postagem: IBodyUpdatePostagens, fot
         });
 
         if (!postagemCadastrada) {
-            return new Error('Funcionario não localizado');
+            return new Error('Postagem não localizado');
         }
 
         const {

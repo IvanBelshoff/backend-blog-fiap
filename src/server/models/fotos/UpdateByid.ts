@@ -47,7 +47,7 @@ export const updateById = async (id: number, tipo_foto: 'postagens' | 'usuarios'
                 fotoRecuperada.tamanho = tamanho,
                 fotoRecuperada.local = local,
                 fotoRecuperada.tipo = mime.extension(tipo) as string,
-                fotoRecuperada.url = String(fotoLocal) == 'true' ? `http://${process.env.HOST}:${process.env.PORT}/uploads/fotos/usuarios/${nome}` : `https://firebasestorage.googleapis.com/v0/b/blog-fiap.appspot.com/o/${nome}?alt=media`,
+                fotoRecuperada.url = String(fotoLocal) == 'true' ? `http://${process.env.HOST}:${process.env.PORT}/uploads/${tipo_foto == 'usuarios' ? 'fotos' : 'capas'}/${tipo_foto}/${nome}` : `https://firebasestorage.googleapis.com/v0/b/blog-fiap.appspot.com/o/${nome}?alt=media`,
                 fotoRecuperada.width = width,
                 fotoRecuperada.height = height,
                 fotoRecuperada.nuvem = nuvem;
