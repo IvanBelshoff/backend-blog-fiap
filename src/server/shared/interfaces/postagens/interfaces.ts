@@ -8,6 +8,7 @@ export interface IQueryGetAllPostagens {
     page?: number;
     limit?: number;
     filter?: string;
+    visivel?: boolean;
 }
 
 export interface IQuerySearchPosts {
