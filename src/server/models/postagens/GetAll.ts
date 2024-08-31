@@ -4,7 +4,8 @@ import { postagemRepository } from '../../database/repositories';
 export const getAll = async (
     page?: number,
     limit?: number,
-    filter?: string): Promise<Omit<Postagem, 'foto'>[] | Error> => {
+    filter?: string,
+    visivel?: boolean): Promise<Omit<Postagem, 'foto'>[] | Error> => {
     try {
 
         const result = postagemRepository.createQueryBuilder('postagem')
@@ -17,6 +18,10 @@ export const getAll = async (
 
         if (typeof filter === 'string') {
             result.andWhere('LOWER(postagem.titulo) LIKE LOWER(:titulo)', { titulo: `%${filter}%` });
+        }
+
+        if (visivel) {
+            result.andWhere('postagem.visivel IS :visivel', { visivel: visivel });
         }
 
         const usuarios = await result.getMany();
