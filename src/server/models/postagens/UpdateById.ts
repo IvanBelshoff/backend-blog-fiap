@@ -9,8 +9,6 @@ export const updateById = async (id: number, postagem: IBodyUpdatePostagens, fot
 
         if (foto) {
 
-            console.log(foto);
-
             const updateFoto = FotosProvider.updateById(id, 'postagens', 'atualizar', foto);
 
             if (updateFoto instanceof Error) {
@@ -31,11 +29,13 @@ export const updateById = async (id: number, postagem: IBodyUpdatePostagens, fot
         const {
             titulo = postagem.titulo || postagemCadastrada.titulo,
             conteudo = postagem.conteudo || postagemCadastrada.conteudo,
+            visivel = postagem.visivel || postagemCadastrada.visivel,
             usuario_atualizador = postagem.usuario_atualizador || postagemCadastrada.usuario_atualizador,
         } = postagem;
 
         postagemCadastrada.titulo = titulo,
         postagemCadastrada.conteudo = conteudo,
+        postagemCadastrada.visivel = visivel,
         postagemCadastrada.usuario_atualizador = usuario_atualizador;
 
         const atualizaPostagem = await postagemRepository.save(postagemCadastrada);

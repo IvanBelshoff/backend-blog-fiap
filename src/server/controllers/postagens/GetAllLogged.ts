@@ -20,10 +20,10 @@ export const getAllLogged = async (req: Request<{}, {}, {}, IQueryGetAllPostagen
         req.query.page,
         req.query.limit,
         req.query.filter,
-        req.query.visivel
+        true
     );
 
-    const count = await PostagensProvider.count(req.query.filter);
+    const count = await PostagensProvider.count(req.query.filter, true);
 
     if (result instanceof Error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
