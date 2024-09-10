@@ -1,4 +1,4 @@
-import { IEmailValidaEmailUsuario } from '../../shared/interfaces';
+import { IPostlValidaPostagem } from '../../shared/interfaces';
 import { postagemRepository } from '../../database/repositories';
 
 export const validaCamposPostagens = async (titulo: string, id?: number): Promise<void | Error> => {
@@ -19,13 +19,13 @@ export const validaCamposPostagens = async (titulo: string, id?: number): Promis
                 ]
             });
 
-            const propriedades: IEmailValidaEmailUsuario = {};
+            const propriedades: IPostlValidaPostagem = {};
 
             const camposDuplicados = postagemCasdastrada[0].filter(usuario => usuario.titulo == titulo && usuario.titulo != postagemUpdate?.titulo);
 
             if (camposDuplicados.length > 0) {
                 if (camposDuplicados.some(usuario => usuario.titulo === titulo)) {
-                    propriedades.email = 'Já existe postagem com este titulo.';
+                    propriedades.titulo = 'Já existe postagem com este titulo.';
                 }
             }
 
@@ -45,13 +45,13 @@ export const validaCamposPostagens = async (titulo: string, id?: number): Promis
                 ]
             });
 
-            const propriedades: IEmailValidaEmailUsuario = {};
+            const propriedades: IPostlValidaPostagem = {};
 
             const camposDuplicados = postagemCasdastrada[0].filter(usuario => usuario.titulo == titulo);
 
             if (camposDuplicados.length > 0) {
                 if (camposDuplicados.some(usuario => usuario.titulo === titulo)) {
-                    propriedades.email = 'Já existe postagem com este titulo.';
+                    propriedades.titulo = 'Já existe postagem com este titulo.';
                 }
             }
 

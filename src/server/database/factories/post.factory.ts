@@ -20,7 +20,7 @@ export default setSeederFactory(Postagem, async (faker) => {
 
     const post = new Postagem();
 
-    post.titulo = faker.lorem.sentence();
+    post.titulo = faker.lorem.sentence({min: 30, max: 50});
     post.conteudo = faker.lorem.paragraphs({min: 1, max: 5});
     post.visivel = faker.datatype.boolean();
     post.usuario_atualizador = 'seed';

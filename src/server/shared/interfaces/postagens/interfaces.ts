@@ -13,3 +13,7 @@ export interface IQueryGetAllPostagens {
 export interface IQuerySearchPosts {
     search: string;
 }
+
+export interface IPostlValidaPostagem {
+    titulo?: string
+}
