@@ -15,7 +15,7 @@ export class Postagem {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number;
 
-    @Column({ type: 'text', nullable: false, unique: true })
+    @Column({ type: 'varchar', nullable: false, unique: true, length: 50 })
     titulo: string;
 
     @Column({ type: 'text', nullable: false })
