@@ -13,7 +13,7 @@ import { PostagensProvider } from '../../models/postagens';
 export const updataByIdValidation = validation((getSchema) => ({
     body: getSchema<IBodyUpdatePostagens>(yup.object().shape({
         titulo: yup.string().required().min(1).max(50),
-        conteudo: yup.string().required().min(1).max(50),
+        conteudo: yup.string().required().min(1),
         visivel: yup.boolean().optional()
     })),
 }));
