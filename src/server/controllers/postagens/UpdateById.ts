@@ -52,6 +52,7 @@ export const updateById = async (req: Request<IParamsIdGlobal, {}, IBodyUpdatePo
 
     const result = await PostagensProvider.updateById(Number(req.params.id), {
         ...req.body,
+        visivel:  (req.body.visivel != undefined && typeof req.body.visivel === 'string') ? (req.body.visivel == 'true' ? true : false) : (false),
         usuario_atualizador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido'
     }, req.file && {
         local: req.file.path,

@@ -13,6 +13,6 @@ export default class PostSeeder implements Seeder {
         await postFactory.save();
 
         // save 5 factory generated entities, to the database
-        await postFactory.saveMany(9);
+        await postFactory.saveMany(289);
     }
 }

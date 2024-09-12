@@ -477,7 +477,7 @@ router.get('/posts', PostagensController.getAllValidation, PostagensController.g
  *       200:
  *         description: Lista de postagens
  */
-router.get('/posts/logged', EnsureAuthenticated, Regras(['REGRA_PROFESSOR']),  PostagensController.getAllValidation, PostagensController.getAllLogged);
+router.get('/posts/logged', PostagensController.getAllValidation, PostagensController.getAllLogged);
 
 /**
  * @swagger
@@ -531,7 +531,7 @@ router.get('/posts/:id', PostagensController.getByIdValidation, PostagensControl
  *       200:
  *         description: Postagem atualizada com sucesso
  */
-router.put('/posts/:id', EnsureAuthenticated, Regras(['REGRA_PROFESSOR']), Permissoes(['PERMISSAO_ATUALIZAR_POSTAGEM']),String(fotoLocal) == 'true' ? SalvarFoto('postagens') : SalvarFotoFirebase(), PostagensController.updataByIdValidation, PostagensController.updateById);
+router.put('/posts/:id', EnsureAuthenticated, Regras(['REGRA_PROFESSOR']), Permissoes(['PERMISSAO_ATUALIZAR_POSTAGEM']), String(fotoLocal) == 'true' ? SalvarFoto('postagens') : SalvarFotoFirebase(), PostagensController.updataByIdValidation, PostagensController.updateById);
 
 /**
  * @swagger
@@ -552,5 +552,8 @@ router.put('/posts/:id', EnsureAuthenticated, Regras(['REGRA_PROFESSOR']), Permi
  *         description: Postagem deletada com sucesso
  */
 router.delete('/posts/:id', EnsureAuthenticated, Regras(['REGRA_PROFESSOR']), Permissoes(['PERMISSAO_DELETAR_POSTAGEM']), PostagensController.deleteByIdValidation, PostagensController.deleteById);
+
+
+router.delete('/posts/capa/:id', EnsureAuthenticated, Regras(['REGRA_PROFESSOR']), Permissoes(['PERMISSAO_ATUALIZAR_POSTAGEM']), PostagensController.deleteCapaByIdValidation, PostagensController.deleteCapaById);
 
 export { router };

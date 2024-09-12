@@ -83,7 +83,7 @@ export const create = async (req: Request<{}, {}, IBodyCreatePostagens>, res: Re
             id_foto: resultFoto,
             titulo: req.body.titulo,
             conteudo: req.body.conteudo,
-            visivel: req.body.visivel,
+            visivel:  (req.body.visivel != undefined && typeof req.body.visivel === 'string') ? (req.body.visivel == 'true' ? true : false) : (false),
             usuario_cadastrador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
             usuario_atualizador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
             file: !!req.file
@@ -136,7 +136,7 @@ export const create = async (req: Request<{}, {}, IBodyCreatePostagens>, res: Re
             id_foto: resultFoto,
             titulo: req.body.titulo,
             conteudo: req.body.conteudo,
-            visivel: req.body.visivel,
+            visivel:  (req.body.visivel != undefined && typeof req.body.visivel === 'string') ? (req.body.visivel == 'true' ? true : false) : (false),
             usuario_cadastrador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
             usuario_atualizador: `${usuario?.nome} ${usuario?.sobrenome}` || 'desconhecido',
             file: !!req.file

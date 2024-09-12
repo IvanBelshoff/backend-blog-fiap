@@ -5,6 +5,7 @@ import * as GetAllLogged from './GetAllLogged';
 import * as GetById from './GetById';
 import * as UpdateById from './UpdateById';
 import * as Search from './Search';
+import * as DeleteCapaById from './DeleteCapaById';
 
 export const PostagensController = {
     ...Create,
@@ -13,5 +14,6 @@ export const PostagensController = {
     ...GetAllLogged,
     ...GetById,
     ...UpdateById,
-    ...Search
+    ...Search,
+    ...DeleteCapaById
 };

@@ -1,3 +1,4 @@
+import { vi } from '@faker-js/faker';
 import { Postagem } from '../../database/entities';
 import { postagemRepository } from '../../database/repositories';
 
@@ -16,12 +17,12 @@ export const getAll = async (
             result.take(page * limit);
         }
 
-        if (typeof filter === 'string') {
-            result.andWhere('LOWER(postagem.titulo) LIKE LOWER(:titulo)', { titulo: `%${filter}%` });
+        if (visivel && typeof visivel === 'boolean') {
+            result.where('postagem.visivel = :visivel', { visivel: visivel });
         }
 
-        if (visivel) {
-            result.andWhere('postagem.visivel IS :visivel', { visivel: visivel });
+        if (typeof filter === 'string') {
+            result.andWhere('LOWER(postagem.titulo) LIKE LOWER(:titulo)', { titulo: `%${filter}%` });
         }
 
         const usuarios = await result.getMany();
