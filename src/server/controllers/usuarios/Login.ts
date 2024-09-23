@@ -45,6 +45,14 @@ export const login = async (req: Request<{}, {}, IBodyLoginUsuarios>, res: Respo
         });
     }
 
+    if (usuario.regra?.length == 0) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+            errors: {
+                default: 'Usuário sem regra'
+            }
+        });
+    }
+
     const passwordMatch = await PasswordCrypto.verifyPassword(String(senha), String(usuario.senha));
 
     if (!passwordMatch) {

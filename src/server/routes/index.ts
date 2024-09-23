@@ -361,7 +361,6 @@ router.get('/usuarios/:id', EnsureAuthenticated, UsuariosController.getByIdValid
  *         description: Usuário atualizado com sucesso
  */
 router.put('/usuarios/:id', EnsureAuthenticated, Regras(['REGRA_USUARIO']), Permissoes(['PERMISSAO_ATUALIZAR_USUARIO']), String(fotoLocal) == 'true' ? SalvarFoto('usuarios') : SalvarFotoFirebase(), UsuariosController.updataByIdValidation, UsuariosController.updateById);
-
 /**
  * @swagger
  * /usuarios/autenticacao/{id}:
@@ -380,6 +379,9 @@ router.put('/usuarios/:id', EnsureAuthenticated, Regras(['REGRA_USUARIO']), Perm
  *       200:
  *         description: Permissões de autenticação atualizadas com sucesso
  */
+
+router.patch('/usuarios/password/:id', EnsureAuthenticated, String(fotoLocal) == 'true' ? SalvarFoto('usuarios') : SalvarFotoFirebase(), UsuariosController.updatePasswordByIdValidation, UsuariosController.updatePasswordById);
+
 router.patch('/usuarios/autenticacao/:id', EnsureAuthenticated, Regras(['REGRA_ADMIN']), UsuariosController.updateRolesAndPermissionsByIdValidation, UsuariosController.updateRolesAndPermissionsById);
 
 /**
@@ -414,7 +416,7 @@ router.patch('/usuarios/copy/autenticacao', EnsureAuthenticated, Regras(['REGRA_
  *       200:
  *         description: Foto deletada com sucesso
  */
-router.delete('/usuarios/foto/:id', EnsureAuthenticated, Regras(['REGRA_USUARIO']), Permissoes(['PERMISSAO_ATUALIZAR_USUARIO']), UsuariosController.deleteFotoByIdValidation, UsuariosController.deleteFotoById);
+router.delete('/usuarios/foto/:id', EnsureAuthenticated, UsuariosController.deleteFotoByIdValidation, UsuariosController.deleteFotoById);
 
 /**
  * @swagger

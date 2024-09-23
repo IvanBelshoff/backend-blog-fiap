@@ -3,7 +3,7 @@ import { usuarioRepository } from '../../database/repositories';
 import { FotosProvider } from '../fotos';
 import { Foto, Permissao, Regra } from '../../database/entities';
 import { PasswordCrypto } from '../../shared/services';
-import { IBodyUpdateByIdUsuarios } from '../../shared/interfaces';
+import { IBodyPropsUsuarios } from '../../shared/interfaces';
 
 const regrasCopiadas = async (id_usuario: number, id?: number): Promise<Error | { regras: Regra[]; permissoes: Permissao[]; }> => {
 
@@ -39,7 +39,7 @@ const regrasCopiadas = async (id_usuario: number, id?: number): Promise<Error | 
     };
 };
 
-export const updateById = async (id: number, usuario: IBodyUpdateByIdUsuarios, foto?: Omit<Foto, 'id' | 'data_atualizacao' | 'data_criacao' | 'usuario' | 'postagem' | 'url'>): Promise<void | Error> => {
+export const updateById = async (id: number, usuario: IBodyPropsUsuarios, foto?: Omit<Foto, 'id' | 'data_atualizacao' | 'data_criacao' | 'usuario' | 'postagem' | 'url'>): Promise<void | Error> => {
 
     try {
 
@@ -62,17 +62,17 @@ export const updateById = async (id: number, usuario: IBodyUpdateByIdUsuarios, f
             return new Error('Funcionario não localizado');
         }
 
-        if (usuario.senha) {
+        if (usuario?.senha) {
             const senhaHash = await PasswordCrypto.hashPassword(usuario.senha);
             usuarioCadastrado.senha = senhaHash;
         }
 
         const {
-            bloqueado = usuario.bloqueado || usuarioCadastrado.bloqueado,
-            email = usuario.email || usuarioCadastrado.email,
-            nome = usuario.nome || usuarioCadastrado.nome,
-            sobrenome = usuario.sobrenome || usuarioCadastrado.sobrenome,
-            usuario_atualizador = usuario.usuario_atualizador || usuarioCadastrado.usuario_atualizador,
+            bloqueado = usuario?.bloqueado || usuarioCadastrado.bloqueado,
+            email = usuario?.email || usuarioCadastrado.email,
+            nome = usuario?.nome || usuarioCadastrado.nome,
+            sobrenome = usuario?.sobrenome || usuarioCadastrado.sobrenome,
+            usuario_atualizador = usuario?.usuario_atualizador || usuarioCadastrado.usuario_atualizador,
             id_copy_regras
         } = usuario;
 

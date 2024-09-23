@@ -8,6 +8,7 @@ import * as DeleteFotoById from './DeleteFotoById';
 import * as UpdateRolesAndPermissionsById from './UpdateRolesAndPermissionsById';
 import * as DeleteById from './DeleteById';
 import * as CopyRolesAndPermissionsById from './CopyRolesAndPermissionsById';
+import * as UpdatePasswordById from './UpdatePasswordById';
 
 export const UsuariosController = {
     ...Login,
@@ -19,5 +20,6 @@ export const UsuariosController = {
     ...UpdateRolesAndPermissionsById,
     ...GetById,
     ...DeleteById,
-    ...CopyRolesAndPermissionsById
+    ...CopyRolesAndPermissionsById,
+    ...UpdatePasswordById
 };

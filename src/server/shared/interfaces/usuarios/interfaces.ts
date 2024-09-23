@@ -24,6 +24,19 @@ export interface IBodyUpdateRolesAndPermissionsByIdUsuarios { regras?: number[],
 
 export interface IBodyUpdateByIdUsuarios extends Omit<Usuario, 'id' | 'data_criacao' | 'data_atualizacao' | 'regra' | 'permissao' | 'foto'> { id_copy_regras?: number }
 
+export interface IBodyPropsPasswordUsuarios extends Pick<Usuario, 'senha'> { }
+
+export interface IBodyPropsUsuarios {
+    senha?: string;
+    nome?: string;
+    sobrenome?: string;
+    email?: string;
+    bloqueado?: boolean;
+    usuario_atualizador?: string,
+    usuario_cadastrador?: string,
+    id_copy_regras?: number, 
+}
+
 export interface IEmailValidaEmailUsuario {
     email?: string
 }
