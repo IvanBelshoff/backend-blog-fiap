@@ -5,14 +5,15 @@ import { usuarioRepository } from '../../database/repositories';
 export const getAll = async (
     page?: number,
     limit?: number,
-    filter?: string): Promise<Omit<Usuario, 'senha' | 'foto'>[] | Error> => {
+    filter?: string): Promise<Omit<Usuario, 'senha'>[] | Error> => {
     try {
 
         const result = usuarioRepository.createQueryBuilder('usuario')
+            .leftJoinAndSelect('usuario.foto', 'foto')
             .orderBy('usuario.nome', 'DESC');
 
         if (page && typeof page == 'string' && limit && typeof limit == 'string') {
-            result.skip((page - 1) * limit)
+            result.skip((page - 1) * limit);
             result.take(limit);
         }
 
@@ -23,7 +24,7 @@ export const getAll = async (
         const usuarios = await result.getMany();
 
 
-        const newUsers: Omit<Usuario, 'senha' | 'foto'>[] = usuarios.map(user => ({
+        const newUsers: Omit<Usuario, 'senha'>[] = usuarios.map(user => ({
             id: user.id,
             nome: user.nome,
             bloqueado: user.bloqueado,
@@ -35,7 +36,8 @@ export const getAll = async (
             permissao: user.permissao,
             ultimo_login: user.ultimo_login,
             usuario_atualizador: user.usuario_atualizador,
-            usuario_cadastrador: user.usuario_cadastrador
+            usuario_cadastrador: user.usuario_cadastrador,
+            foto: user.foto
         }));
 
         return newUsers;
