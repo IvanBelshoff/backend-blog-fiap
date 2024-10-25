@@ -9,11 +9,13 @@ import * as UpdateRolesAndPermissionsById from './UpdateRolesAndPermissionsById'
 import * as DeleteById from './DeleteById';
 import * as CopyRolesAndPermissionsById from './CopyRolesAndPermissionsById';
 import * as UpdatePasswordById from './UpdatePasswordById';
+import * as GetAllMobile from './GetAllMobile';
 
 export const UsuariosController = {
     ...Login,
     ...Create,
     ...GetAll,
+    ...GetAllMobile,
     ...RecoverPassword,
     ...UpdateById,
     ...DeleteFotoById,

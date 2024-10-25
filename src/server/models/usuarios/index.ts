@@ -11,11 +11,13 @@ import * as UpdateRolesAndPermissionsById from './UpdateRolesAndPermissionsById'
 import * as UpdateUsuarioAtualizador from './UpdateUsuarioAtualizador';
 import * as UpdateDateLogin from './UpdateDateLogin';
 import * as CopyRolesAndPermissionsById from './CopyRolesAndPermissionsById';
+import * as GetAllMobile from './GetAllMobile';
 
 export const UsuariosProvider = {
     ...GetByEmail,
     ...Create,
     ...GetAll,
+    ...GetAllMobile,
     ...Count,
     ...UpdateById,
     ...DeleteById,

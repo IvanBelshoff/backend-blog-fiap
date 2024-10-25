@@ -324,6 +324,20 @@ router.get('/usuarios', EnsureAuthenticated, Regras(['REGRA_USUARIO']), Usuarios
 
 /**
  * @swagger
+ * /usuarios/mobile:
+ *   get:
+ *     summary: Retorna todos os usuários
+ *     tags: [Usuarios]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de usuários
+ */
+router.get('/usuarios/mobile', EnsureAuthenticated, Regras(['REGRA_USUARIO']), UsuariosController.getAllMobileValidation, UsuariosController.getAllMobile);
+
+/**
+ * @swagger
  * /usuarios/{id}:
  *   get:
  *     summary: Retorna um usuário pelo ID
